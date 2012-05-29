@@ -94,8 +94,10 @@ module SimpleCov
 
       # Initialize lines
       @lines = []
+      @relevant_lines = 0
       src.each_with_index do |src, i|
         @lines << SimpleCov::SourceFile::Line.new(src, i+1, coverage[i])
+        @relevant_lines += 1 if src !~ /^\s*(def|else|end|#)/
       end
       process_skipped_lines!
       @lines
@@ -110,11 +112,10 @@ module SimpleCov
     # The coverage for this file in percent. 0 if the file has no relevant lines
     def covered_percent
       return 100.0 if lines.length == 0 or lines.length == never_lines.count
-      relevant_lines = lines.count - never_lines.count - skipped_lines.count
-      if relevant_lines == 0
+      if @relevant_lines == 0
         0
       else
-        (covered_lines.count) * 100 / relevant_lines.to_f
+        (covered_lines.count) * 100 / @relevant_lines.to_f
       end
     end
 
