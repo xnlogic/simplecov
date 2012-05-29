@@ -97,7 +97,7 @@ module SimpleCov
       @relevant_lines = 0
       src.each_with_index do |src, i|
         @lines << SimpleCov::SourceFile::Line.new(src, i+1, coverage[i])
-        @relevant_lines += 1 if src !~ /^\s*(def|else|end|#)/
+        @relevant_lines += 1 if src !~ /^\s*(def|else|end|$)/
       end
       process_skipped_lines!
       @lines
